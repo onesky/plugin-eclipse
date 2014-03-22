@@ -38,7 +38,7 @@ public class OneSkyServiceBuilder {
 				return err;
 			}
 		})
-		.setLogLevel(LogLevel.FULL)
+//		.setLogLevel(LogLevel.FULL)
 		.build();
 	
 		OneSkyService service = restAdapter.create(OneSkyService.class);

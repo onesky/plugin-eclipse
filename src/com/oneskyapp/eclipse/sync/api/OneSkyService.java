@@ -3,6 +3,7 @@ package com.oneskyapp.eclipse.sync.api;
 import java.util.List;
 
 import retrofit.http.GET;
+import retrofit.http.Path;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -10,8 +11,37 @@ public interface OneSkyService {
 
 	@GET("/project-groups")
 	public ProjectGroupList getProjectGroupList();
+	
+	@GET("/project-groups/{project_group_id}/projects")
+	public ProjectList getProjectList(@Path("project_group_id") String projectGroupId);
+	
+	static class ProjectList{
+		private Meta meta;
+		
+		@SerializedName("data")
+		private List<Project> projects;
 
-	// @Query("page") int page, @Query("per_page") int pageSize
+		public Meta getMeta() {
+			return meta;
+		}
+
+		public List<Project> getProjects() {
+			return projects;
+		}
+	}
+	
+	static class Project{
+		private long id;
+		private String name;
+
+		public long getId() {
+			return id;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
 
 	static class ProjectGroupList {
 		private Meta meta;
