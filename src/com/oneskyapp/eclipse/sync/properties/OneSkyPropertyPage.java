@@ -158,8 +158,10 @@ public class OneSkyPropertyPage extends PropertyPage {
 
 				});
 		dialog.setElements(projectGroups.toArray(new ProjectGroup[0]));
-		dialog.setEmptyListMessage("No Project Groups");
-		dialog.setTitle("Select Project Group");
+		dialog.setEmptyListMessage("No Project Group Available");
+		dialog.setTitle("Project Group");
+		dialog.setHelpAvailable(false);
+		dialog.setMessage("Select Project Group from the list");
 		if (dialog.open() == Window.OK) {
 			Object[] result = dialog.getResult();
 			System.out.println(result.length);
