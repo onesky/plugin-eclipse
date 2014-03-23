@@ -27,7 +27,7 @@ import com.oneskyapp.eclipse.sync.Activator;
 import com.oneskyapp.eclipse.sync.api.OneSkyService;
 import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
 import com.oneskyapp.eclipse.sync.api.model.ProjectGroup;
-import com.oneskyapp.eclipse.sync.utils.ProjectPerferenceHelper;
+import com.oneskyapp.eclipse.sync.utils.ProjectPreferenceHelper;
 
 public class OneSkyPropertyPage extends PropertyPage {
 	private Text txtPublicKey;
@@ -43,7 +43,7 @@ public class OneSkyPropertyPage extends PropertyPage {
 	private String projectGroupId;
 	private String projectGroupName;
 	
-	private ProjectPerferenceHelper prjPerf;
+	private ProjectPreferenceHelper prjPerf;
 
 	public OneSkyPropertyPage() {
 		super();
@@ -55,7 +55,7 @@ public class OneSkyPropertyPage extends PropertyPage {
 	public void setElement(IAdaptable element) {
 		project = (IProject) element.getAdapter(IProject.class);
 
-		prjPerf = new ProjectPerferenceHelper(project);
+		prjPerf = new ProjectPreferenceHelper(project);
 
 		setPreferenceStore(prjPerf.getPrefStore());
 	}

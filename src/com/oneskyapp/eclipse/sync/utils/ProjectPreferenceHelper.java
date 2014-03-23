@@ -6,7 +6,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import com.oneskyapp.eclipse.sync.Activator;
 
-public class ProjectPerferenceHelper {
+public class ProjectPreferenceHelper {
 
 	public static final String PREF_PROJECT_GROUP_ID = "project_group_id";
 	public static final String PREF_API_SECRET_KEY = "api.secret_key";
@@ -16,7 +16,7 @@ public class ProjectPerferenceHelper {
 	private IProject project;
 	private ScopedPreferenceStore prefStore;
 
-	public ProjectPerferenceHelper(IProject project) {
+	public ProjectPreferenceHelper(IProject project) {
 		this.project = project;
 		this.prefStore = new ScopedPreferenceStore(new ProjectScope(project),
 				Activator.PLUGIN_ID);
