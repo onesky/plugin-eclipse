@@ -27,12 +27,9 @@ import com.oneskyapp.eclipse.sync.Activator;
 import com.oneskyapp.eclipse.sync.api.OneSkyService;
 import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
 import com.oneskyapp.eclipse.sync.api.model.ProjectGroup;
+import com.oneskyapp.eclipse.sync.utils.ProjectPerferenceHelper;
 
 public class OneSkyPropertyPage extends PropertyPage {
-	private static final String PREF_PROJECT_GROUP_ID = "project_group_id";
-	private static final String PREF_API_SECRET_KEY = "api.secret_key";
-	private static final String PREF_API_PUBLIC_KEY = "api.public_key";
-	private static final String PREF_PROJECT_GROUP_NAME = "project_group_name";
 	private Text txtPublicKey;
 	private Text txtSecretKey;
 	private IProject project;
@@ -45,6 +42,8 @@ public class OneSkyPropertyPage extends PropertyPage {
 
 	private String projectGroupId;
 	private String projectGroupName;
+	
+	private ProjectPerferenceHelper prjPerf;
 
 	public OneSkyPropertyPage() {
 		super();
@@ -56,10 +55,9 @@ public class OneSkyPropertyPage extends PropertyPage {
 	public void setElement(IAdaptable element) {
 		project = (IProject) element.getAdapter(IProject.class);
 
-		ScopedPreferenceStore projectScopePerferenceStore = new ScopedPreferenceStore(
-				new ProjectScope(project), Activator.PLUGIN_ID);
+		prjPerf = new ProjectPerferenceHelper(project);
 
-		setPreferenceStore(projectScopePerferenceStore);
+		setPreferenceStore(prjPerf.getPrefStore());
 	}
 
 	/**
@@ -177,12 +175,10 @@ public class OneSkyPropertyPage extends PropertyPage {
 	}
 
 	protected void loadPreference() {
-		IPreferenceStore ps = getPreferenceStore();
-		txtPublicKey.setText(ps.getString(PREF_API_PUBLIC_KEY));
-		txtSecretKey.setText(ps.getString(PREF_API_SECRET_KEY));
-
-		projectGroupId = ps.getString(PREF_PROJECT_GROUP_ID);
-		txtProjectGroupDetail.setText(ps.getString(PREF_PROJECT_GROUP_NAME));
+		txtPublicKey.setText(prjPerf.getAPIPublicKey());
+		txtSecretKey.setText(prjPerf.getAPISecretKey());
+		projectGroupId = prjPerf.getProjectGroupId();
+		txtProjectGroupDetail.setText(String.format("#%s, %s", projectGroupId, prjPerf.getProjectGroupName()));
 	}
 
 	protected void performDefaults() {
@@ -206,10 +202,10 @@ public class OneSkyPropertyPage extends PropertyPage {
 			return false;
 		}
 
-		ps.setValue(PREF_API_PUBLIC_KEY, publicKey);
-		ps.setValue(PREF_API_SECRET_KEY, secretKey);
-		ps.setValue(PREF_PROJECT_GROUP_ID, projectGroupId);
-		ps.setValue(PREF_PROJECT_GROUP_NAME, projectGroupName);
+		prjPerf.setAPIPublicKey(publicKey);
+		prjPerf.setAPISecretKey(secretKey);
+		prjPerf.setProjectGroupId(projectGroupId);
+		prjPerf.setProjectGroupName(projectGroupName);
 
 		return true;
 	}
