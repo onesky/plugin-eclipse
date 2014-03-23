@@ -1,21 +1,17 @@
 package com.oneskyapp.eclipse.sync.api;
 
-import java.io.StringWriter;
-
-import com.google.gson.Gson;
-import com.oneskyapp.eclipse.sync.api.OneSkyService.Meta;
-
 import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
+import retrofit.RestAdapter.Builder;
 import retrofit.RestAdapter.LogLevel;
-import retrofit.converter.GsonConverter;
+import retrofit.RetrofitError;
 
 public class OneSkyServiceBuilder {
 	
 	private final static String domain = "https://platform.api.onesky.io/1";
 	private String publicKey;
 	private String sercetKey;
+	private boolean debugMode;
 	
 	public OneSkyServiceBuilder(String publicKey, String sercetKey) {
 		super();
@@ -24,7 +20,7 @@ public class OneSkyServiceBuilder {
 	}
 
 	public OneSkyService build(){
-		RestAdapter restAdapter = new RestAdapter.Builder()
+		Builder builder = new RestAdapter.Builder()
 		.setEndpoint(domain)
 		.setRequestInterceptor(new OneSkyServiceRequestInterceptor(publicKey,sercetKey))
         .setErrorHandler(new ErrorHandler() {
@@ -37,11 +33,23 @@ public class OneSkyServiceBuilder {
 //				System.out.println(meta.getStatus());
 				return err;
 			}
-		})
+		});
 //		.setLogLevel(LogLevel.FULL)
-		.build();
+		if(debugMode){
+			builder.setLogLevel(LogLevel.FULL);
+		}
+		
+		RestAdapter restAdapter = builder.build();
 	
 		OneSkyService service = restAdapter.create(OneSkyService.class);
 		return service;
+	}
+
+	public boolean isDebugMode() {
+		return debugMode;
+	}
+
+	public void setDebugMode(boolean debugMode) {
+		this.debugMode = debugMode;
 	}
 }
