@@ -4,7 +4,7 @@ Bundle-Name: OneSky Sync
 Bundle-SymbolicName: com.oneskyapp.eclipse.sync; singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.oneskyapp.eclipse.sync.Activator
-Bundle-Vendor: ONESKYAPP
+Bundle-Vendor: OneSky
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources
