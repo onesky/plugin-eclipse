@@ -7,6 +7,10 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -16,6 +20,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import retrofit.mime.TypedFile;
 
+import com.oneskyapp.eclipse.sync.Activator;
 import com.oneskyapp.eclipse.sync.api.OneSkyService;
 import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
 import com.oneskyapp.eclipse.sync.utils.ProjectPreferenceHelper;
@@ -47,19 +52,35 @@ public class PushAndroidStringsHandler extends AbstractHandler {
 //        IPath path = project.getFullPath();
 //        System.out.println(path);
         
-        ProjectPreferenceHelper pref = new ProjectPreferenceHelper(project);
+        final ProjectPreferenceHelper pref = new ProjectPreferenceHelper(project);
         
-        OneSkyService service = new OneSkyServiceBuilder(pref.getAPIPublicKey(), pref.getAPISecretKey()).build();
+        final OneSkyService service = new OneSkyServiceBuilder(pref.getAPIPublicKey(), pref.getAPISecretKey()).build();
         
-		String stringFilePath = "/res/values/strings.xml";
-		File stringFile = project.getFile(stringFilePath).getLocation().toFile();
+		final String stringFilePath = "/res/values/strings.xml";
+		final File stringFile = project.getFile(stringFilePath).getLocation().toFile();
 		
 		System.out.println(stringFile);
 		
 		if(pref.isProjectSet()){
 			if(stringFile.exists()){
-				TypedFile typedFile = new TypedFile("application/xml", stringFile);
-				service.uploadFile(pref.getProjectId(), typedFile, "ANDROID_XML", null, null);
+				
+				Job job = new Job(handlerName) {
+				     @Override
+				     protected IStatus run(IProgressMonitor monitor) {
+				         monitor.beginTask("Sending " + stringFilePath + " to OneSky for Translation", 100);
+				         
+				         TypedFile typedFile = new TypedFile("application/xml", stringFile);
+						 service.uploadFile(pref.getProjectId(), typedFile, "ANDROID_XML", null, null);
+							
+//						 new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Job finished");
+						 
+				         monitor.done();
+				         return Status.OK_STATUS;
+				     }
+
+				 };
+				 job.setUser(true);
+				 job.schedule();
 			}else{
 				MessageDialog.openError(window.getShell(), handlerName, 
 						stringFilePath + " does not exists.");
