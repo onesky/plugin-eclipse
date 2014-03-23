@@ -25,8 +25,8 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import com.oneskyapp.eclipse.sync.Activator;
 import com.oneskyapp.eclipse.sync.api.OneSkyService;
-import com.oneskyapp.eclipse.sync.api.OneSkyService.ProjectGroup;
 import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
+import com.oneskyapp.eclipse.sync.api.model.ProjectGroup;
 
 public class OneSkyPropertyPage extends PropertyPage {
 	private static final String PREF_PROJECT_GROUP_ID = "project_group_id";
