@@ -247,11 +247,11 @@ public class OneSkyPropertyPage extends PropertyPage {
 		txtSecretKey.setText(prjPerf.getAPISecretKey());
 		
 		projectGroupId = prjPerf.getProjectGroupId();
-		String projectGroupName = prjPerf.getProjectGroupName();
+		projectGroupName = prjPerf.getProjectGroupName();
 		setProjectGroupDetail(projectGroupId, projectGroupName);
 		
 		projectId = prjPerf.getProjectId();
-		String projectName = prjPerf.getProjectName();
+		projectName = prjPerf.getProjectName();
 		setProjectDetail(projectId, projectName);
 	}
 
@@ -280,6 +280,8 @@ public class OneSkyPropertyPage extends PropertyPage {
 		prjPerf.setAPISecretKey(secretKey);
 		prjPerf.setProjectGroupId(projectGroupId);
 		prjPerf.setProjectGroupName(projectGroupName);
+		prjPerf.setProjectId(projectId);
+		prjPerf.setProjectName(projectName);
 
 		return true;
 	}

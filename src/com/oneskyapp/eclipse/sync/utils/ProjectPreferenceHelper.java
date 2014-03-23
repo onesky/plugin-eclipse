@@ -85,7 +85,7 @@ public class ProjectPreferenceHelper {
 		if (StringUtils.isBlank(getAPIPublicKey())
 				|| StringUtils.isBlank(getAPISecretKey())
 				|| StringUtils.isBlank(getProjectGroupId())
-				|| StringUtils.isBlank(getProjectName())) {
+				|| StringUtils.isBlank(getProjectId())) {
 			return false;
 		}
 		return true;
