@@ -1,17 +1,17 @@
 package com.oneskyapp.eclipse.sync.api;
 
 import java.io.File;
+import java.io.IOException;
 
-import org.apache.commons.lang3.builder.RecursiveToStringStyle;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
+import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 
 import com.oneskyapp.eclipse.sync.api.model.FileUploadResponse;
 import com.oneskyapp.eclipse.sync.api.model.Project;
 import com.oneskyapp.eclipse.sync.api.model.ProjectGroup;
-import com.oneskyapp.eclipse.sync.api.model.ProjectLanguage;
 import com.oneskyapp.eclipse.sync.api.model.ProjectLanguageList;
 import com.oneskyapp.eclipse.sync.api.model.ProjectList;
 
@@ -42,12 +42,21 @@ public class OneSkyServiceTest {
 			}
 		}
 		
+		String projectId = "8903";
 		String mimeType = "application/xml";
 		File file = new File("strings.xml");
 		System.out.println(file.getAbsolutePath());
 		TypedFile typedFile = new TypedFile(mimeType, file);
-		FileUploadResponse resp = service.uploadFile("8903", typedFile, "ANDROID_XML", null , null);
-		printObject(resp);
+		FileUploadResponse fileUploadResp = service.uploadFile(projectId , typedFile, "ANDROID_XML", null , null);
+		printObject(fileUploadResp);
+		
+		Response exportResponse = service.exportTranslation(projectId, "zh-TW", "strings.xml", null);
+		File exportFile = new File("test.xml");
+		try {
+			FileUtils.copyInputStreamToFile(exportResponse.getBody().in(), exportFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void printObject(Object obj){

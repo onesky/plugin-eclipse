@@ -1,12 +1,12 @@
 package com.oneskyapp.eclipse.sync.api;
 
-import java.util.Date;
-
+import retrofit.client.Response;
 import retrofit.http.GET;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import retrofit.mime.TypedFile;
 
 import com.oneskyapp.eclipse.sync.api.model.FileUploadResponse;
@@ -30,4 +30,10 @@ public interface OneSkyService {
 	
 	@GET("/projects/{project_id}/languages")
 	public ProjectLanguageList getProjectLanguageList(@Path("project_id") String projectId);
+	
+	@GET("/projects/{project_id}/translations")
+	public Response exportTranslation(@Path("project_id") String projectId, 
+			@Query("locale") String locale,
+			@Query("source_file_name") String sourceFileName,
+			@Query("export_file_name") String exportFileName);
 }
