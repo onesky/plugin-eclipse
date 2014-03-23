@@ -11,6 +11,7 @@ import retrofit.mime.TypedFile;
 
 import com.oneskyapp.eclipse.sync.api.model.FileUploadResponse;
 import com.oneskyapp.eclipse.sync.api.model.ProjectGroupList;
+import com.oneskyapp.eclipse.sync.api.model.ProjectLanguageList;
 import com.oneskyapp.eclipse.sync.api.model.ProjectList;
 
 public interface OneSkyService {
@@ -26,4 +27,7 @@ public interface OneSkyService {
 	public FileUploadResponse uploadFile(@Path("project_id") String projectId, @Part("file") TypedFile file, 
 			@Part("file_format") String fileFormat, @Part("locale") String local, 
 			@Part("is_keeping_all_strings") Boolean keepAllStrings);
+	
+	@GET("/projects/{project_id}/languages")
+	public ProjectLanguageList getProjectLanguageList(@Path("project_id") String projectId);
 }
