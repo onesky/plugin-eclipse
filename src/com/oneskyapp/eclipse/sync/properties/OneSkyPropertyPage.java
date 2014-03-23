@@ -2,8 +2,8 @@ package com.oneskyapp.eclipse.sync.properties;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
@@ -21,11 +21,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.dialogs.PropertyPage;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
-import com.oneskyapp.eclipse.sync.Activator;
 import com.oneskyapp.eclipse.sync.api.OneSkyService;
 import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
+import com.oneskyapp.eclipse.sync.api.model.Project;
 import com.oneskyapp.eclipse.sync.api.model.ProjectGroup;
 import com.oneskyapp.eclipse.sync.utils.ProjectPreferenceHelper;
 
@@ -44,6 +43,8 @@ public class OneSkyPropertyPage extends PropertyPage {
 	private String projectGroupName;
 	
 	private ProjectPreferenceHelper prjPerf;
+	private String projectName;
+	private String projectId;
 
 	public OneSkyPropertyPage() {
 		super();
@@ -130,10 +131,69 @@ public class OneSkyPropertyPage extends PropertyPage {
 		btnBrowseProject.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
 				false, false, 1, 1));
 		btnBrowseProject.setText("Browse");
+		btnBrowseProject.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				browseProjects();
+			}
+		});
 
 		loadPreference();
 
 		return composite;
+	}
+	
+	protected void browseProjects() {
+		String publicKey = txtPublicKey.getText();
+		String secretKey = txtSecretKey.getText();
+
+		if(StringUtils.isBlank(publicKey)){
+			setErrorMessage("API Public Key is not set");
+			return;
+		}
+		
+		if(StringUtils.isBlank(secretKey)){
+			setErrorMessage("API Secret Key is not set");
+			return;
+		}
+		
+		if(StringUtils.isBlank(projectGroupId)){
+			setErrorMessage("Project Group is not set");
+			return;
+		}
+		
+		OneSkyService service = new OneSkyServiceBuilder(publicKey, secretKey)
+				.build();
+
+		List<Project> project = service.getProjectList(projectGroupId).getProjects();
+
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
+				getShell(), new LabelProvider() {
+
+					@Override
+					public String getText(Object element) {
+						Project projectGroup = (Project) element;
+						return projectGroup.getName();
+					}
+
+				});
+		dialog.setElements(project.toArray(new Project[0]));
+		dialog.setEmptyListMessage("No Project Available");
+		dialog.setTitle("Project ");
+		dialog.setHelpAvailable(false);
+		dialog.setMessage("Select Project from the list");
+		if (dialog.open() == Window.OK) {
+			Object[] result = dialog.getResult();
+			System.out.println(result.length);
+			if (result.length > 0) {
+				Project pg = (Project) result[0];
+				projectName = pg.getName();
+				projectId = String.valueOf(pg.getId());
+
+				setProjectDetail(projectId, projectName);
+			}
+		}
+
 	}
 
 	protected void browseProjectGroups() {
@@ -168,17 +228,31 @@ public class OneSkyPropertyPage extends PropertyPage {
 				projectGroupName = pg.getName();
 				projectGroupId = String.valueOf(pg.getId());
 
-				txtProjectGroupDetail.setText(projectGroupName);
+				setProjectGroupDetail(projectGroupId, projectGroupName);
 			}
 		}
 
+	}
+	
+	protected void setProjectGroupDetail(String pgId, String pgName){
+		txtProjectGroupDetail.setText(String.format("#%s, %s", pgId, pgName));
+	}
+	
+	protected void setProjectDetail(String prjId, String prjName){
+		txtProjectDetail.setText(String.format("#%s, %s", prjId, prjName));
 	}
 
 	protected void loadPreference() {
 		txtPublicKey.setText(prjPerf.getAPIPublicKey());
 		txtSecretKey.setText(prjPerf.getAPISecretKey());
+		
 		projectGroupId = prjPerf.getProjectGroupId();
-		txtProjectGroupDetail.setText(String.format("#%s, %s", projectGroupId, prjPerf.getProjectGroupName()));
+		String projectGroupName = prjPerf.getProjectGroupName();
+		setProjectGroupDetail(projectGroupId, projectGroupName);
+		
+		projectId = prjPerf.getProjectId();
+		String projectName = prjPerf.getProjectName();
+		setProjectDetail(projectId, projectName);
 	}
 
 	protected void performDefaults() {

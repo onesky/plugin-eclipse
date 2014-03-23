@@ -1,5 +1,6 @@
 package com.oneskyapp.eclipse.sync.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -12,6 +13,8 @@ public class ProjectPreferenceHelper {
 	public static final String PREF_API_SECRET_KEY = "api.secret_key";
 	public static final String PREF_API_PUBLIC_KEY = "api.public_key";
 	public static final String PREF_PROJECT_GROUP_NAME = "project_group_name";
+	public static final String PREF_PROJECT_ID = "project_id";
+	public static final String PREF_PROJECT_NAME = "project_name";
 
 	private IProject project;
 	private ScopedPreferenceStore prefStore;
@@ -61,5 +64,30 @@ public class ProjectPreferenceHelper {
 	public String getProjectGroupName() {
 		return prefStore.getString(PREF_PROJECT_GROUP_NAME);
 	}
+	
+	public void setProjectId(String projectId) {
+		prefStore.setValue(PREF_PROJECT_ID, projectId);
+	}
 
+	public String getProjectId() {
+		return prefStore.getString(PREF_PROJECT_ID);
+	}
+	
+	public void setProjectName(String projectName) {
+		prefStore.setValue(PREF_PROJECT_NAME, projectName);
+	}
+
+	public String getProjectName() {
+		return prefStore.getString(PREF_PROJECT_NAME);
+	}
+
+	public boolean isProjectSet() {
+		if (StringUtils.isBlank(getAPIPublicKey())
+				|| StringUtils.isBlank(getAPISecretKey())
+				|| StringUtils.isBlank(getProjectGroupId())
+				|| StringUtils.isBlank(getProjectName())) {
+			return false;
+		}
+		return true;
+	}
 }
