@@ -173,7 +173,7 @@ public class OneSkyPropertyPage extends PropertyPage {
 					@Override
 					public String getText(Object element) {
 						Project projectGroup = (Project) element;
-						return projectGroup.getName();
+						return String.format("#%s - %s", projectGroup.getId(), projectGroup.getName());
 					}
 
 				});
