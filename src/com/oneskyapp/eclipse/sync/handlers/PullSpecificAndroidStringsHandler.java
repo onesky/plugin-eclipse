@@ -81,10 +81,12 @@ public class PullSpecificAndroidStringsHandler extends AbstractHandler {
 					Display.getDefault().syncExec(new Runnable() {
 					    public void run() {
 					    	ProjectLanguage[] selectedLangs = getSelectedLanguages(window, langs);
-							Job job = new AndroidLanguageFileDownloadJob(selectedLangs, project,
-							service, projectId);
-							job.setUser(true);
-							job.schedule();
+					    	if(selectedLangs != null){
+								Job job = new AndroidLanguageFileDownloadJob(selectedLangs, project,
+								service, projectId);
+								job.setUser(true);
+								job.schedule();
+					    	}
 					    }
 					});
 				}
