@@ -56,7 +56,7 @@ public final class AndroidLanguageFileDownloadJob extends Job {
 					prepareFolder((IFolder) file.getParent().getAdapter(
 							IFolder.class));
 					if(file.exists()){
-						file.setContents(resp.getBody().in(), false, false,
+						file.setContents(resp.getBody().in(), true, true,
 								monitor);
 					}else{
 						file.create(resp.getBody().in(), true, monitor);
