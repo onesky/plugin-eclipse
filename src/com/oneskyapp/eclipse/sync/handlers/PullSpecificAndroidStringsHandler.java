@@ -105,7 +105,8 @@ public class PullSpecificAndroidStringsHandler extends AbstractHandler {
 			List<ProjectLanguage> langs) {
 		List<ProjectLanguage> filteredLangs = new ArrayList<ProjectLanguage>();
 		for (ProjectLanguage lang : langs) {
-			if (lang.isReadyToPublish() && !lang.isBaseLanguage()) {
+			if (//lang.isReadyToPublish() && the api not finished 
+					!lang.isBaseLanguage()) {
 				filteredLangs.add(lang);
 			}
 		}

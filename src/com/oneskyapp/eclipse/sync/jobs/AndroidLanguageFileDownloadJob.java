@@ -40,7 +40,11 @@ public final class AndroidLanguageFileDownloadJob extends Job {
 				try {
 					Response resp = service.exportTranslation(projectId,
 							lang.getCode(), "strings.xml", "strings.xml");
-
+					
+					if(resp.getStatus() == 204){
+						continue;//skip empty content file
+					}
+					
 					String androidCode;
 					if (lang.getCode().contains("-")) {
 						androidCode = lang.getCode().replaceFirst("-", "-r");
@@ -51,7 +55,12 @@ public final class AndroidLanguageFileDownloadJob extends Job {
 							+ "/strings.xml");
 					prepareFolder((IFolder) file.getParent().getAdapter(
 							IFolder.class));
-					file.create(resp.getBody().in(), true, monitor);
+					if(file.exists()){
+						file.setContents(resp.getBody().in(), false, false,
+								monitor);
+					}else{
+						file.create(resp.getBody().in(), true, monitor);
+					}
 					// exportFile.mkdir();
 					// FileUtils.copyInputStreamToFile(
 					// resp.getBody().in(), exportFile);
