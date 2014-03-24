@@ -89,7 +89,7 @@ public class OneSkyPropertyPage extends PropertyPage {
 				false, 1, 1));
 		lblSecretKey.setText("Secret Key");
 
-		txtSecretKey = new Text(composite, SWT.BORDER);
+		txtSecretKey = new Text(composite, SWT.BORDER | SWT.PASSWORD);
 		txtSecretKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 3, 1));
 
