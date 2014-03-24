@@ -11,6 +11,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -64,40 +66,35 @@ public class PullSpecificAndroidStringsHandler extends AbstractHandler {
 
 		final String projectId = pref.getProjectId();
 		
-		
-		ProgressMonitorDialog monitorDialog = new ProgressMonitorDialog(window.getShell());
-		
-		try {
-			monitorDialog.run(true, false, new IRunnableWithProgress() {
-				
-				@Override
-				public void run(IProgressMonitor monitor) throws InvocationTargetException,
-						InterruptedException {
-					monitor.beginTask("Retrieving available languages",
-							100);
-					final List<ProjectLanguage> langs = service
-							.getProjectLanguageList(projectId).getLanguages();
-					monitor.done();
-					Display.getDefault().syncExec(new Runnable() {
-					    public void run() {
-					    	ProjectLanguage[] selectedLangs = getSelectedLanguages(window, langs);
-					    	if(selectedLangs != null){
-								Job job = new AndroidLanguageFileDownloadJob(selectedLangs, project,
-								service, projectId);
-								job.setUser(true);
-								job.schedule();
-					    	}
-					    }
-					});
-				}
+		Job job = new Job("Retrieve available languages"){
 
-			});
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				monitor.beginTask("Retrieving available languages",
+						100);
+				final List<ProjectLanguage> langs = service
+						.getProjectLanguageList(projectId).getLanguages();
+				if(monitor.isCanceled()){
+					return Status.CANCEL_STATUS;
+				}
+				monitor.done();
+				Display.getDefault().syncExec(new Runnable() {
+				    public void run() {
+				    	ProjectLanguage[] selectedLangs = getSelectedLanguages(window, langs);
+				    	if(selectedLangs != null){
+							Job job = new AndroidLanguageFileDownloadJob(selectedLangs, project,
+							service, projectId);
+							job.setUser(true);
+							job.schedule();
+				    	}
+				    }
+				});
+				return Status.OK_STATUS;
+			}
+			
+		};
+		job.setUser(true);
+		job.schedule();
 
 		return null;
 	}
