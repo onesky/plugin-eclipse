@@ -42,21 +42,21 @@ public class OneSkyServiceTest {
 			}
 		}
 		
-		String projectId = "8903";
-		String mimeType = "application/xml";
-		File file = new File("strings.xml");
-		System.out.println(file.getAbsolutePath());
-		TypedFile typedFile = new TypedFile(mimeType, file);
-		FileUploadResponse fileUploadResp = service.uploadFile(projectId , typedFile, "ANDROID_XML", null , null);
-		printObject(fileUploadResp);
-		
-		Response exportResponse = service.exportTranslation(projectId, "zh-TW", "strings.xml", null);
-		File exportFile = new File("test.xml");
-		try {
-			FileUtils.copyInputStreamToFile(exportResponse.getBody().in(), exportFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		String projectId = "8903";
+//		String mimeType = "application/xml";
+//		File file = new File("strings.xml");
+//		System.out.println(file.getAbsolutePath());
+//		TypedFile typedFile = new TypedFile(mimeType, file);
+//		FileUploadResponse fileUploadResp = service.uploadFile(projectId , typedFile, "ANDROID_XML", null , null);
+//		printObject(fileUploadResp);
+//		
+//		Response exportResponse = service.exportTranslation(projectId, "zh-TW", "strings.xml", null);
+//		File exportFile = new File("test.xml");
+//		try {
+//			FileUtils.copyInputStreamToFile(exportResponse.getBody().in(), exportFile);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public static void printObject(Object obj){
