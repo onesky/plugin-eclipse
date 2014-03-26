@@ -99,7 +99,7 @@ public class ProjectPreferenceHelper {
 		if(!isProjectSet()){
 			String handlerName = Activator.getDefault().getBundle().getHeaders()
 					.get(org.osgi.framework.Constants.BUNDLE_NAME);
-			MessageDialog.openError(shell, handlerName, "Project is not set");
+			MessageDialog.openError(shell, handlerName, "Project is not set correctly");//TODO add more info
 			String propertyPageId = "com.oneskyapp.eclipse.sync.properties.OneSkyPropertyPage";
 			PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(
 					shell, project, propertyPageId, null, null);

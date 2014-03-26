@@ -65,8 +65,6 @@ public class OneSkyPropertyPage extends PropertyPage {
 	 * @see PreferencePage#createContents(Composite)
 	 */
 	protected Control createContents(final Composite parent) {
-		this.noDefaultAndApplyButton();
-
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 4;
@@ -256,7 +254,16 @@ public class OneSkyPropertyPage extends PropertyPage {
 	}
 
 	protected void performDefaults() {
-		super.performDefaults();
+		txtPublicKey.setText("");
+		txtSecretKey.setText("");
+		
+		projectGroupId = "";
+		projectGroupName = "";
+		projectId = "";
+		projectName = "";
+		
+		txtProjectDetail.setText("");
+		txtProjectGroupDetail.setText("");
 	}
 
 	public boolean performOk() {
@@ -265,16 +272,21 @@ public class OneSkyPropertyPage extends PropertyPage {
 		String publicKey = txtPublicKey.getText();
 		String secretKey = txtSecretKey.getText();
 
-		if (publicKey == null || publicKey.isEmpty() || secretKey == null
-				|| secretKey.isEmpty()) {
-			setErrorMessage("Public Key and Secret Key cannot be empty");
-			return false;
-		}
-
-		if (projectGroupId == null || projectGroupId.isEmpty()) {
-			setErrorMessage("Project Group cannot be empty");
-			return false;
-		}
+//		if (publicKey == null || publicKey.isEmpty() || secretKey == null
+//				|| secretKey.isEmpty()) {
+//			setErrorMessage("Public Key and Secret Key cannot be empty");
+//			return false;
+//		}
+//
+//		if (projectGroupId == null || projectGroupId.isEmpty()) {
+//			setErrorMessage("Project Group cannot be empty");
+//			return false;
+//		}
+//		
+//		if (projectId == null || projectName.isEmpty()) {
+//			setErrorMessage("Project Id cannot be empty");
+//			return false;
+//		}
 
 		prjPerf.setAPIPublicKey(publicKey);
 		prjPerf.setAPISecretKey(secretKey);
