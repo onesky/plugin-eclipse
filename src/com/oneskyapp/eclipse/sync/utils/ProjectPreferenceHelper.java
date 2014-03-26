@@ -3,6 +3,10 @@ package com.oneskyapp.eclipse.sync.utils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import com.oneskyapp.eclipse.sync.Activator;
@@ -89,5 +93,20 @@ public class ProjectPreferenceHelper {
 			return false;
 		}
 		return true;
+	}
+	
+	public boolean checkIfProjectPreferenceSet(IProject project, Shell shell) {
+		if(!isProjectSet()){
+			String handlerName = Activator.getDefault().getBundle().getHeaders()
+					.get(org.osgi.framework.Constants.BUNDLE_NAME);
+			MessageDialog.openError(shell, handlerName, "Project is not set");
+			String propertyPageId = "com.oneskyapp.eclipse.sync.properties.OneSkyPropertyPage";
+			PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(
+					shell, project, propertyPageId, null, null);
+			dialog.open();
+			return false;
+		}else{
+			return true;
+		}
 	}
 }

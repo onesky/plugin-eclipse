@@ -14,13 +14,13 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import retrofit.mime.TypedFile;
 
-import com.oneskyapp.eclipse.sync.Activator;
 import com.oneskyapp.eclipse.sync.api.OneSkyService;
 import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
 import com.oneskyapp.eclipse.sync.utils.ProjectPreferenceHelper;
@@ -61,7 +61,7 @@ public class PushAndroidStringsHandler extends AbstractHandler {
 		
 		System.out.println(stringFile);
 		
-		if(pref.isProjectSet()){
+		if(pref.checkIfProjectPreferenceSet(project, window.getShell())){
 			if(stringFile.exists()){
 				
 				Job job = new Job(handlerName) {
@@ -85,12 +85,6 @@ public class PushAndroidStringsHandler extends AbstractHandler {
 				MessageDialog.openError(window.getShell(), handlerName, 
 						stringFilePath + " does not exists.");
 			}
-		}else{
-			MessageDialog.openError(window.getShell(), handlerName, "Project is not set");
-			String propertyPageId = "com.oneskyapp.eclipse.sync.properties.OneSkyPropertyPage";
-			PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(
-					window.getShell(), project, propertyPageId, null, null);
-			dialog.open();
 		}
 		
 		return null;

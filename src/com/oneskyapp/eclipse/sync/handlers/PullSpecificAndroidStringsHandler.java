@@ -25,6 +25,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import com.oneskyapp.eclipse.sync.Activator;
 import com.oneskyapp.eclipse.sync.api.OneSkyService;
 import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
 import com.oneskyapp.eclipse.sync.api.model.ProjectLanguage;
@@ -60,42 +61,43 @@ public class PullSpecificAndroidStringsHandler extends AbstractHandler {
 
 		final ProjectPreferenceHelper pref = new ProjectPreferenceHelper(
 				project);
-
-		final OneSkyService service = new OneSkyServiceBuilder(
-				pref.getAPIPublicKey(), pref.getAPISecretKey()).build();
-
-		final String projectId = pref.getProjectId();
 		
-		Job job = new Job("Retrieve available languages"){
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Retrieving available languages",
-						100);
-				final List<ProjectLanguage> langs = service
-						.getProjectLanguageList(projectId).getLanguages();
-				if(monitor.isCanceled()){
-					return Status.CANCEL_STATUS;
-				}
-				monitor.done();
-				Display.getDefault().syncExec(new Runnable() {
-				    public void run() {
-				    	ProjectLanguage[] selectedLangs = getSelectedLanguages(window, langs);
-				    	if(selectedLangs != null){
-							Job job = new AndroidLanguageFileDownloadJob(selectedLangs, project,
-							service, projectId);
-							job.setUser(true);
-							job.schedule();
-				    	}
-				    }
-				});
-				return Status.OK_STATUS;
-			}
+		if(pref.checkIfProjectPreferenceSet(project, window.getShell())){
+			final OneSkyService service = new OneSkyServiceBuilder(
+					pref.getAPIPublicKey(), pref.getAPISecretKey()).build();
+	
+			final String projectId = pref.getProjectId();
 			
-		};
-		job.setUser(true);
-		job.schedule();
-
+			Job job = new Job("Retrieve available languages"){
+	
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					monitor.beginTask("Retrieving available languages",
+							100);
+					final List<ProjectLanguage> langs = service
+							.getProjectLanguageList(projectId).getLanguages();
+					if(monitor.isCanceled()){
+						return Status.CANCEL_STATUS;
+					}
+					monitor.done();
+					Display.getDefault().syncExec(new Runnable() {
+					    public void run() {
+					    	ProjectLanguage[] selectedLangs = getSelectedLanguages(window, langs);
+					    	if(selectedLangs != null){
+								Job job = new AndroidLanguageFileDownloadJob(selectedLangs, project,
+								service, projectId);
+								job.setUser(true);
+								job.schedule();
+					    	}
+					    }
+					});
+					return Status.OK_STATUS;
+				}
+				
+			};
+			job.setUser(true);
+			job.schedule();
+		}
 		return null;
 	}
 

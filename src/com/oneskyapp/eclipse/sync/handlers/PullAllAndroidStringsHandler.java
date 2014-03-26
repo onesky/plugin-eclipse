@@ -48,19 +48,23 @@ public class PullAllAndroidStringsHandler extends AbstractHandler {
 		final ProjectPreferenceHelper pref = new ProjectPreferenceHelper(
 				project);
 
-		final OneSkyService service = new OneSkyServiceBuilder(
-				pref.getAPIPublicKey(), pref.getAPISecretKey()).build();
-
-		final String projectId = pref.getProjectId();
-
-		final List<ProjectLanguage> langs = service.getProjectLanguageList(
-				projectId).getLanguages();
-
-		Job job = new AndroidLanguageFileDownloadJob(
-				langs.toArray(new ProjectLanguage[0]), project, service,
-				projectId);
-		job.setUser(true);
-		job.schedule();
+		if(pref.checkIfProjectPreferenceSet(project, window.getShell())){
+		
+			final OneSkyService service = new OneSkyServiceBuilder(
+					pref.getAPIPublicKey(), pref.getAPISecretKey()).build();
+	
+			final String projectId = pref.getProjectId();
+	
+			final List<ProjectLanguage> langs = service.getProjectLanguageList(
+					projectId).getLanguages();
+	
+			Job job = new AndroidLanguageFileDownloadJob(
+					langs.toArray(new ProjectLanguage[0]), project, service,
+					projectId);
+			job.setUser(true);
+			job.schedule();
+		
+		}
 		return null;
 	}
 }
