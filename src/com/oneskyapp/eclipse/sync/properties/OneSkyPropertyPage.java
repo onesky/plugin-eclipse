@@ -9,6 +9,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -27,6 +28,7 @@ import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
 import com.oneskyapp.eclipse.sync.api.model.Project;
 import com.oneskyapp.eclipse.sync.api.model.ProjectGroup;
 import com.oneskyapp.eclipse.sync.utils.ProjectPreferenceHelper;
+import com.oneskyapp.eclipse.sync.wizards.ProjectSelectionWizard;
 
 public class OneSkyPropertyPage extends PropertyPage {
 	private Text txtPublicKey;
@@ -117,10 +119,9 @@ public class OneSkyPropertyPage extends PropertyPage {
 		lblProject = new Label(composite, SWT.NONE);
 		lblProject.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		lblProject.setText("Project");
+		lblProject.setText("Project ID");
 
 		txtProjectDetail = new Text(composite, SWT.BORDER);
-		txtProjectDetail.setEditable(false);
 		txtProjectDetail.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
 				false, 1, 1));
 		new Label(composite, SWT.NONE);
@@ -133,6 +134,9 @@ public class OneSkyPropertyPage extends PropertyPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				browseProjects();
+//				ProjectSelectionWizard wizard = new ProjectSelectionWizard();
+//				WizardDialog dialog = new WizardDialog(getShell(), wizard);
+//				dialog.open();
 			}
 		});
 
