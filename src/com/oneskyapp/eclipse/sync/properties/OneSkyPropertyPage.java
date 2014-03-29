@@ -133,7 +133,7 @@ public class OneSkyPropertyPage extends PropertyPage {
 		WizardDialog dialog = new WizardDialog(getShell(), wizard);
 		dialog.setTitle("OneSky Project Settings");
 		if(dialog.open() == Window.OK){
-			
+			txtProjectId.setText(String.valueOf(model.getProject().getId()));
 		}
 		
 //		OneSkyService service = new OneSkyServiceBuilder(publicKey, secretKey)
