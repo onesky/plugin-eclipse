@@ -10,6 +10,7 @@ import retrofit.http.Query;
 import retrofit.mime.TypedFile;
 
 import com.oneskyapp.eclipse.sync.api.model.FileUploadResponse;
+import com.oneskyapp.eclipse.sync.api.model.ProjectDetail;
 import com.oneskyapp.eclipse.sync.api.model.ProjectGroupList;
 import com.oneskyapp.eclipse.sync.api.model.ProjectLanguageList;
 import com.oneskyapp.eclipse.sync.api.model.ProjectList;
@@ -36,4 +37,7 @@ public interface OneSkyService {
 			@Query("locale") String locale,
 			@Query("source_file_name") String sourceFileName,
 			@Query("export_file_name") String exportFileName);
+	
+	@GET("/projects/{project_id}")
+	public ProjectDetail getProjectDetail(@Path("project_id") String projectId);
 }

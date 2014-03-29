@@ -28,6 +28,8 @@ import org.eclipse.swt.widgets.Text;
 import com.oneskyapp.eclipse.sync.api.OneSkyService;
 import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
 import com.oneskyapp.eclipse.sync.api.model.Project;
+import com.oneskyapp.eclipse.sync.api.model.ProjectDetail;
+import com.oneskyapp.eclipse.sync.api.model.ProjectType;
 
 public class ProjectSelectionWizardPage extends WizardPage {
 
@@ -37,7 +39,7 @@ public class ProjectSelectionWizardPage extends WizardPage {
 	private TableViewer tableViewer;
 	private ProjectSelectionWizardModel model;
 	private TableViewerColumn nameCol;
-	private ProjectFilter projectFilter;
+	private ProjectDetailFilter projectFilter;
 
 	public ProjectSelectionWizardPage(ProjectSelectionWizardModel model) {
 		super("Project Selection");
@@ -88,35 +90,69 @@ public class ProjectSelectionWizardPage extends WizardPage {
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
 			tableViewer.setContentProvider(new ArrayContentProvider());
-			projectFilter = new ProjectFilter();
+			projectFilter = new ProjectDetailFilter();
 			tableViewer.addFilter(projectFilter);
 			
-			String[] titles = { "#", "Name"};
-		    int[] bounds = { 100, 100 };
+			String[] titles = { "#", "Name", "Type", "Description"};
+		    int[] bounds = { 100, 100, 100, 100 };
 
 		    TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
 		    col.setLabelProvider(new ColumnLabelProvider() {
 		      @Override
 		      public String getText(Object element) {
-		    	  Project p = (Project) element;
+		    	  ProjectDetail p = (ProjectDetail) element;
 		        return String.valueOf(p.getId());
 		      }
 		    });
 
-		    nameCol = createTableViewerColumn(titles[1], bounds[1], 1);
-		    nameCol.setLabelProvider(new ColumnLabelProvider() {
+		    col = createTableViewerColumn(titles[1], bounds[1], 1);
+		    col.setLabelProvider(new ColumnLabelProvider() {
 		      @Override
 		      public String getText(Object element) {
-		    	  Project p = (Project) element;
-		        return p.getName();
-		      }
+					ProjectDetail p = (ProjectDetail) element;
+					return p.getName();
+				}
+		    });
+		    
+		    col = createTableViewerColumn(titles[2], bounds[2], 2);
+		    col.setLabelProvider(new ColumnLabelProvider() {
+		      @Override
+		      public String getText(Object element) {
+					ProjectDetail p = (ProjectDetail) element;
+					ProjectType type = p.getType();
+					if(type != null){
+						return type.getName();
+					}
+					return "";
+				}
+		    });
+		    
+		    col = createTableViewerColumn(titles[3], bounds[3], 3);
+		    col.setLabelProvider(new ColumnLabelProvider() {
+		      @Override
+		      public String getText(Object element) {
+					ProjectDetail p = (ProjectDetail) element;
+					return p.getDescription();
+				}
 		    });
 		    
 		    tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 		        public void selectionChanged(final SelectionChangedEvent event) {
 		            IStructuredSelection selection = (IStructuredSelection)event.getSelection();
-		            Project prj = (Project) selection.getFirstElement();
-		            model.setProject(prj);
+		            final ProjectDetail prjDetail = (ProjectDetail) selection.getFirstElement();
+		            model.setProject(new Project(){
+
+						@Override
+						public long getId() {
+							return prjDetail.getId();
+						}
+
+						@Override
+						public String getName() {
+							return prjDetail.getName();
+						}
+		            	
+		            });
 		            setPageComplete(true);
 		        }
 		    });
@@ -141,7 +177,7 @@ public class ProjectSelectionWizardPage extends WizardPage {
 //							.valueOf(model.getProjectGroup().getId()));
 //					final List<Project> projects = projectList.getProjects();
 					
-					Thread.sleep(2000);
+					Thread.sleep(1000);
 					
 					final List<Project> projects = new ArrayList<Project>();
 					Project prj;
@@ -173,14 +209,73 @@ public class ProjectSelectionWizardPage extends WizardPage {
 						
 					};
 					projects.add(prj);
+					
+					final List<ProjectDetail> projectDetails = new ArrayList<ProjectDetail>();
+					for(Project project: projects){
+						monitor.subTask(String.format("Retrieving Project %s Details", project.getId()));
+						Thread.sleep(1000);
+//						ProjectDetail prjDetail = service.getProjectDetail(String.valueOf(project.getId()));
+//						prjDetails.add(prjDetail);
+						
+						ProjectDetail prjDetail;
+						prjDetail = new ProjectDetail(){
+
+							@Override
+							public String getDescription() {
+								return "desc";
+							}
+
+							@Override
+							public Long getStringCount() {
+								return 1L;
+							}
+
+							@Override
+							public Long getStringWordCount() {
+								return 1L;
+							}
+
+							@Override
+							public long getId() {
+								return 1L;
+							}
+
+							@Override
+							public String getName() {
+								return "name";
+							}
+
+							@Override
+							public ProjectType getType() {
+								return new ProjectType(){
+
+									@Override
+									public String getCode() {
+										return "prj type code";
+									}
+
+									@Override
+									public String getName() {
+										return "prj type name";
+									}
+									
+								};
+							}
+							
+						};
+						projectDetails.add(prjDetail);
+					}
+					
 					monitor.done();
 					
 					Display.getDefault().syncExec(new Runnable() {
 						
 						@Override
 						public void run() {
-							tableViewer.setInput(projects);
-							nameCol.getColumn().pack();
+							tableViewer.setInput(projectDetails);
+							for(TableColumn tableColumn: table.getColumns()){
+								tableColumn.pack();
+							}
 						}
 					});
 				}
