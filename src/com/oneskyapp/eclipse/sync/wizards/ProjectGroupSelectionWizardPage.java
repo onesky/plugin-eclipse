@@ -21,7 +21,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -31,6 +30,7 @@ import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
 import com.oneskyapp.eclipse.sync.api.model.ProjectGroup;
 
 public class ProjectGroupSelectionWizardPage extends WizardPage {
+	private Composite composite;
 	private Text txtSearch;
 	private Table table;
 	private TableViewer tableViewer;
@@ -43,28 +43,35 @@ public class ProjectGroupSelectionWizardPage extends WizardPage {
 		setTitle("Project Group Selection");
 		setDescription("Select a project group");
 	}
+	
+	
+
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if(visible){
+			setPageComplete(false);
+			model.setProjectGroup(null);
+			getShell().getDisplay().asyncExec(new Runnable() {
+				
+				@Override
+				public void run() {
+					loadProjectGroups();
+				}
+			});
+		}
+	}
 
 	@Override
 	public void createControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
+		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
-
-		composite.addPaintListener(new PaintListener() {
-			boolean first = true;
-
-			@Override
-			public void paintControl(PaintEvent evt) {
-				if (first) {
-					first = false;
-					loadProjectGroups();
-				}
-			}
-		});
-
+		
 		{
 			txtSearch = new Text(composite, SWT.BORDER | SWT.SEARCH);
 			txtSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 					false, 1, 1));
+			setPageComplete(true);
 		}
 
 		{
@@ -112,9 +119,7 @@ public class ProjectGroupSelectionWizardPage extends WizardPage {
 						}
 					});
 		}
-		setPageComplete(false);
-		setControl(parent);
-
+		setControl(composite);
 	}
 
 	private void loadProjectGroups() {
@@ -132,7 +137,7 @@ public class ProjectGroupSelectionWizardPage extends WizardPage {
 					// final List<ProjectGroup> projectGroups =
 					// groupList.getProjectGroups();
 
-					Thread.sleep(5000);
+					Thread.sleep(2000);
 
 					final List<ProjectGroup> projectGroups = new ArrayList<ProjectGroup>();
 					ProjectGroup prjGrp;

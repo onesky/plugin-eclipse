@@ -15,6 +15,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -26,11 +28,10 @@ import org.eclipse.swt.widgets.Text;
 import com.oneskyapp.eclipse.sync.api.OneSkyService;
 import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
 import com.oneskyapp.eclipse.sync.api.model.Project;
-import com.oneskyapp.eclipse.sync.api.model.ProjectGroup;
-import com.oneskyapp.eclipse.sync.api.model.ProjectList;
 
 public class ProjectSelectionWizardPage extends WizardPage {
 
+	private Composite composite;
 	private Text txtSearch;
 	private Table table;
 	private TableViewer tableViewer;
@@ -43,12 +44,28 @@ public class ProjectSelectionWizardPage extends WizardPage {
 		setTitle("Project Selection");
 		setDescription("Select a project");
 	}
+	
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if(visible){
+			setPageComplete(false);
+			model.setProject(null);
+			getShell().getDisplay().asyncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					loadProjects();
+				}
+			});
+		}
+	}
 
 	@Override
 	public void createControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
+		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
-
+		
 		{
 			txtSearch = new Text(composite, SWT.BORDER | SWT.SEARCH);
 			txtSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -96,20 +113,26 @@ public class ProjectSelectionWizardPage extends WizardPage {
 		    });
 		}
 		setPageComplete(false);
-		setControl(parent);
+		setControl(composite);
 		
+	}
+	
+	private void loadProjects(){
 		try {
 			this.getContainer().run(true, false, new IRunnableWithProgress() {
 
 				@Override
 				public void run(IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException {
+					monitor.beginTask("Retrieving Projects", 100);
 					OneSkyService service = new OneSkyServiceBuilder(model
 							.getPublicKey(), model.getSecretKey()).build();
 
 //					ProjectList projectList = service.getProjectList(String
 //							.valueOf(model.getProjectGroup().getId()));
 //					List<Project> projects = projectList.getProjects();
+					
+					Thread.sleep(2000);
 					
 					final List<Project> projects = new ArrayList<Project>();
 					Project prj;
@@ -141,6 +164,7 @@ public class ProjectSelectionWizardPage extends WizardPage {
 						
 					};
 					projects.add(prj);
+					monitor.done();
 					
 					Display.getDefault().syncExec(new Runnable() {
 						
