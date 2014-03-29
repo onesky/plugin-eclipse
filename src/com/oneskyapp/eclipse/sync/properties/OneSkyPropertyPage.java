@@ -29,24 +29,17 @@ import com.oneskyapp.eclipse.sync.api.model.Project;
 import com.oneskyapp.eclipse.sync.api.model.ProjectGroup;
 import com.oneskyapp.eclipse.sync.utils.ProjectPreferenceHelper;
 import com.oneskyapp.eclipse.sync.wizards.ProjectSelectionWizard;
+import com.oneskyapp.eclipse.sync.wizards.ProjectSelectionWizardModel;
 
 public class OneSkyPropertyPage extends PropertyPage {
 	private Text txtPublicKey;
 	private Text txtSecretKey;
 	private IProject project;
-	private Label lblProjectGroup;
-	private Button btnBrowseProjectGroup;
 	private Label lblProject;
 	private Button btnBrowseProject;
-	private Text txtProjectGroupDetail;
-	private Text txtProjectDetail;
+	private Text txtProjectId;
 
-	private String projectGroupId;
-	private String projectGroupName;
-	
 	private ProjectPreferenceHelper prjPerf;
-	private String projectName;
-	private String projectId;
 
 	public OneSkyPropertyPage() {
 		super();
@@ -93,36 +86,13 @@ public class OneSkyPropertyPage extends PropertyPage {
 		txtSecretKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 3, 1));
 
-		lblProjectGroup = new Label(composite, SWT.NONE);
-		lblProjectGroup.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
-				false, false, 1, 1));
-		lblProjectGroup.setText("Project Group");
-
-		txtProjectGroupDetail = new Text(composite, SWT.BORDER);
-		txtProjectGroupDetail.setEditable(false);
-		txtProjectGroupDetail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false, 1, 1));
-		new Label(composite, SWT.NONE);
-
-		btnBrowseProjectGroup = new Button(composite, SWT.NONE);
-		btnBrowseProjectGroup.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				browseProjectGroups();
-			}
-		});
-
-		btnBrowseProjectGroup.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
-				false, false, 1, 1));
-		btnBrowseProjectGroup.setText("Browse");
-
 		lblProject = new Label(composite, SWT.NONE);
 		lblProject.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
 		lblProject.setText("Project ID");
 
-		txtProjectDetail = new Text(composite, SWT.BORDER);
-		txtProjectDetail.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
+		txtProjectId = new Text(composite, SWT.BORDER);
+		txtProjectId.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
 				false, 1, 1));
 		new Label(composite, SWT.NONE);
 
@@ -134,9 +104,6 @@ public class OneSkyPropertyPage extends PropertyPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				browseProjects();
-//				ProjectSelectionWizard wizard = new ProjectSelectionWizard();
-//				WizardDialog dialog = new WizardDialog(getShell(), wizard);
-//				dialog.open();
 			}
 		});
 
@@ -159,122 +126,65 @@ public class OneSkyPropertyPage extends PropertyPage {
 			return;
 		}
 		
-		if(StringUtils.isBlank(projectGroupId)){
-			setErrorMessage("Project Group is not set");
-			return;
+		ProjectSelectionWizardModel model = new ProjectSelectionWizardModel();
+		model.setPublicKey(publicKey);
+		model.setSecretKey(secretKey);
+		ProjectSelectionWizard wizard = new ProjectSelectionWizard(model);
+		WizardDialog dialog = new WizardDialog(getShell(), wizard);
+		dialog.setTitle("OneSky Project Settings");
+		if(dialog.open() == Window.OK){
+			
 		}
 		
-		OneSkyService service = new OneSkyServiceBuilder(publicKey, secretKey)
-				.build();
-
-		List<Project> project = service.getProjectList(projectGroupId).getProjects();
-
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
-				getShell(), new LabelProvider() {
-
-					@Override
-					public String getText(Object element) {
-						Project projectGroup = (Project) element;
-						return String.format("#%s - %s", projectGroup.getId(), projectGroup.getName());
-					}
-
-				});
-		dialog.setElements(project.toArray(new Project[0]));
-		dialog.setEmptyListMessage("No Project Available");
-		dialog.setTitle("Project ");
-		dialog.setHelpAvailable(false);
-		dialog.setMessage("Select Project from the list");
-		if (dialog.open() == Window.OK) {
-			Object[] result = dialog.getResult();
-			System.out.println(result.length);
-			if (result.length > 0) {
-				Project pg = (Project) result[0];
-				projectName = pg.getName();
-				projectId = String.valueOf(pg.getId());
-
-				setProjectDetail(projectId, projectName);
-			}
-		}
-
-	}
-
-	protected void browseProjectGroups() {
-		String publicKey = txtPublicKey.getText();
-		String secretKey = txtSecretKey.getText();
-		OneSkyService service = new OneSkyServiceBuilder(publicKey, secretKey)
-				.build();
-
-		List<ProjectGroup> projectGroups = service.getProjectGroupList()
-				.getProjectGroups();
-
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
-				getShell(), new LabelProvider() {
-
-					@Override
-					public String getText(Object element) {
-						ProjectGroup projectGroup = (ProjectGroup) element;
-						return projectGroup.getName();
-					}
-
-				});
-		dialog.setElements(projectGroups.toArray(new ProjectGroup[0]));
-		dialog.setEmptyListMessage("No Project Group Available");
-		dialog.setTitle("Project Group");
-		dialog.setHelpAvailable(false);
-		dialog.setMessage("Select Project Group from the list");
-		if (dialog.open() == Window.OK) {
-			Object[] result = dialog.getResult();
-			System.out.println(result.length);
-			if (result.length > 0) {
-				ProjectGroup pg = (ProjectGroup) result[0];
-				projectGroupName = pg.getName();
-				projectGroupId = String.valueOf(pg.getId());
-
-				setProjectGroupDetail(projectGroupId, projectGroupName);
-			}
-		}
+//		OneSkyService service = new OneSkyServiceBuilder(publicKey, secretKey)
+//				.build();
+//
+//		List<Project> project = service.getProjectList(projectGroupId).getProjects();
+//
+//		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
+//				getShell(), new LabelProvider() {
+//
+//					@Override
+//					public String getText(Object element) {
+//						Project projectGroup = (Project) element;
+//						return String.format("#%s - %s", projectGroup.getId(), projectGroup.getName());
+//					}
+//
+//				});
+//		dialog.setElements(project.toArray(new Project[0]));
+//		dialog.setEmptyListMessage("No Project Available");
+//		dialog.setTitle("Project ");
+//		dialog.setHelpAvailable(false);
+//		dialog.setMessage("Select Project from the list");
+//		if (dialog.open() == Window.OK) {
+//			Object[] result = dialog.getResult();
+//			System.out.println(result.length);
+//			if (result.length > 0) {
+//				Project pg = (Project) result[0];
+//				projectName = pg.getName();
+//				projectId = String.valueOf(pg.getId());
+//
+//			}
+//		}
 
 	}
 	
-	protected void setProjectGroupDetail(String pgId, String pgName){
-		txtProjectGroupDetail.setText(String.format("#%s, %s", pgId, pgName));
-	}
-	
-	protected void setProjectDetail(String prjId, String prjName){
-		txtProjectDetail.setText(String.format("#%s, %s", prjId, prjName));
-	}
-
 	protected void loadPreference() {
 		txtPublicKey.setText(prjPerf.getAPIPublicKey());
 		txtSecretKey.setText(prjPerf.getAPISecretKey());
-		
-		projectGroupId = prjPerf.getProjectGroupId();
-		projectGroupName = prjPerf.getProjectGroupName();
-		setProjectGroupDetail(projectGroupId, projectGroupName);
-		
-		projectId = prjPerf.getProjectId();
-		projectName = prjPerf.getProjectName();
-		setProjectDetail(projectId, projectName);
+		txtProjectId.setText(prjPerf.getProjectId());
 	}
 
 	protected void performDefaults() {
 		txtPublicKey.setText("");
 		txtSecretKey.setText("");
-		
-		projectGroupId = "";
-		projectGroupName = "";
-		projectId = "";
-		projectName = "";
-		
-		txtProjectDetail.setText("");
-		txtProjectGroupDetail.setText("");
+		txtProjectId.setText("");
 	}
 
 	public boolean performOk() {
-		IPreferenceStore ps = getPreferenceStore();
-
-		String publicKey = txtPublicKey.getText();
-		String secretKey = txtSecretKey.getText();
+		String publicKey = txtPublicKey.getText().trim();
+		String secretKey = txtSecretKey.getText().trim();
+		String projectId = txtProjectId.getText().trim();
 
 //		if (publicKey == null || publicKey.isEmpty() || secretKey == null
 //				|| secretKey.isEmpty()) {
@@ -294,11 +204,8 @@ public class OneSkyPropertyPage extends PropertyPage {
 
 		prjPerf.setAPIPublicKey(publicKey);
 		prjPerf.setAPISecretKey(secretKey);
-		prjPerf.setProjectGroupId(projectGroupId);
-		prjPerf.setProjectGroupName(projectGroupName);
 		prjPerf.setProjectId(projectId);
-		prjPerf.setProjectName(projectName);
-
+		
 		return true;
 	}
 
