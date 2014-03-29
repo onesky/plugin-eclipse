@@ -15,8 +15,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -37,6 +37,7 @@ public class ProjectSelectionWizardPage extends WizardPage {
 	private TableViewer tableViewer;
 	private ProjectSelectionWizardModel model;
 	private TableViewerColumn nameCol;
+	private ProjectFilter projectFilter;
 
 	public ProjectSelectionWizardPage(ProjectSelectionWizardModel model) {
 		super("Project Selection");
@@ -70,6 +71,12 @@ public class ProjectSelectionWizardPage extends WizardPage {
 			txtSearch = new Text(composite, SWT.BORDER | SWT.SEARCH);
 			txtSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 					false, 1, 1));
+			txtSearch.addKeyListener(new KeyAdapter() {
+				public void keyReleased(KeyEvent ke) {
+					projectFilter.setSearchText(txtSearch.getText());
+					tableViewer.refresh();
+				}
+			});
 		}
 
 		{
@@ -81,6 +88,8 @@ public class ProjectSelectionWizardPage extends WizardPage {
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
 			tableViewer.setContentProvider(new ArrayContentProvider());
+			projectFilter = new ProjectFilter();
+			tableViewer.addFilter(projectFilter);
 			
 			String[] titles = { "#", "Name"};
 		    int[] bounds = { 100, 100 };
@@ -130,7 +139,7 @@ public class ProjectSelectionWizardPage extends WizardPage {
 
 //					ProjectList projectList = service.getProjectList(String
 //							.valueOf(model.getProjectGroup().getId()));
-//					List<Project> projects = projectList.getProjects();
+//					final List<Project> projects = projectList.getProjects();
 					
 					Thread.sleep(2000);
 					

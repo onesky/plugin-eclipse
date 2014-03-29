@@ -112,9 +112,21 @@ public class OneSkyPropertyPage extends PropertyPage {
 		return composite;
 	}
 	
+	private String getPublicKey(){
+		return txtPublicKey.getText().trim();
+	}
+	
+	private String getSecretKey(){
+		return txtSecretKey.getText().trim();
+	}
+	
+	private String getProjectId(){
+		return txtProjectId.getText().trim();
+	}
+	
 	protected void browseProjects() {
-		String publicKey = txtPublicKey.getText();
-		String secretKey = txtSecretKey.getText();
+		String publicKey = getPublicKey();
+		String secretKey = getSecretKey();
 
 		if(StringUtils.isBlank(publicKey)){
 			setErrorMessage("API Public Key is not set");
@@ -182,9 +194,9 @@ public class OneSkyPropertyPage extends PropertyPage {
 	}
 
 	public boolean performOk() {
-		String publicKey = txtPublicKey.getText().trim();
-		String secretKey = txtSecretKey.getText().trim();
-		String projectId = txtProjectId.getText().trim();
+		String publicKey = getPublicKey();
+		String secretKey = getSecretKey();
+		String projectId = getProjectId();
 
 //		if (publicKey == null || publicKey.isEmpty() || secretKey == null
 //				|| secretKey.isEmpty()) {

@@ -15,8 +15,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -36,6 +36,7 @@ public class ProjectGroupSelectionWizardPage extends WizardPage {
 	private TableViewer tableViewer;
 	private ProjectSelectionWizardModel model;
 	private TableViewerColumn nameCol;
+	private ProjectGroupFilter projectGroupFilter;
 
 	public ProjectGroupSelectionWizardPage(ProjectSelectionWizardModel model) {
 		super("Project Group Selection");
@@ -71,7 +72,12 @@ public class ProjectGroupSelectionWizardPage extends WizardPage {
 			txtSearch = new Text(composite, SWT.BORDER | SWT.SEARCH);
 			txtSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 					false, 1, 1));
-			setPageComplete(true);
+			txtSearch.addKeyListener(new KeyAdapter() {
+				public void keyReleased(KeyEvent ke) {
+					projectGroupFilter.setSearchText(txtSearch.getText());
+					tableViewer.refresh();
+				}
+			});
 		}
 
 		{
@@ -86,6 +92,8 @@ public class ProjectGroupSelectionWizardPage extends WizardPage {
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
 			tableViewer.setContentProvider(new ArrayContentProvider());
+			projectGroupFilter = new ProjectGroupFilter();
+			tableViewer.addFilter(projectGroupFilter);
 
 			TableViewerColumn col = createTableViewerColumn(titles[0],
 					bounds[0], 0);
@@ -132,10 +140,9 @@ public class ProjectGroupSelectionWizardPage extends WizardPage {
 					monitor.beginTask("Retrieving Project Groups", 100);
 					OneSkyService service = new OneSkyServiceBuilder(model
 							.getPublicKey(), model.getSecretKey()).build();
-					// ProjectGroupList groupList =
-					// service.getProjectGroupList();
-					// final List<ProjectGroup> projectGroups =
-					// groupList.getProjectGroups();
+//					ProjectGroupList groupList = service.getProjectGroupList();
+//					final List<ProjectGroup> projectGroups = groupList
+//							.getProjectGroups();
 
 					Thread.sleep(2000);
 
