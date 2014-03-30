@@ -12,7 +12,7 @@ public class ProjectDetailFilter extends ViewerFilter {
 	private String searchString;
 
 	public void setSearchText(String s) {
-		this.searchString = ".*" + s + ".*";
+		this.searchString = "(?i:.*" + s + ".*)";
 	}
 
 	@Override
