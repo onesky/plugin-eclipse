@@ -1,7 +1,6 @@
 package com.oneskyapp.eclipse.sync.wizards;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,6 +27,7 @@ import org.eclipse.swt.widgets.Text;
 import com.oneskyapp.eclipse.sync.api.OneSkyService;
 import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
 import com.oneskyapp.eclipse.sync.api.model.ProjectGroup;
+import com.oneskyapp.eclipse.sync.api.model.ProjectGroupList;
 
 public class ProjectGroupSelectionWizardPage extends WizardPage {
 	private Composite composite;
@@ -140,42 +140,10 @@ public class ProjectGroupSelectionWizardPage extends WizardPage {
 					monitor.beginTask("Retrieving Project Groups", 100);
 					OneSkyService service = new OneSkyServiceBuilder(model
 							.getPublicKey(), model.getSecretKey()).build();
-//					ProjectGroupList groupList = service.getProjectGroupList();
-//					final List<ProjectGroup> projectGroups = groupList
-//							.getProjectGroups();
+					ProjectGroupList groupList = service.getProjectGroupList();
+					final List<ProjectGroup> projectGroups = groupList
+							.getProjectGroups();
 
-					Thread.sleep(2000);
-
-					final List<ProjectGroup> projectGroups = new ArrayList<ProjectGroup>();
-					ProjectGroup prjGrp;
-					prjGrp = new ProjectGroup() {
-
-						@Override
-						public long getId() {
-							return 1L;
-						}
-
-						@Override
-						public String getName() {
-							return "test 1";
-						}
-
-					};
-					projectGroups.add(prjGrp);
-					prjGrp = new ProjectGroup() {
-
-						@Override
-						public long getId() {
-							return 2L;
-						}
-
-						@Override
-						public String getName() {
-							return "test 2 222222222222222222222";
-						}
-
-					};
-					projectGroups.add(prjGrp);
 					monitor.done();
 
 					Display.getDefault().syncExec(new Runnable() {

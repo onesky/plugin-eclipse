@@ -11,6 +11,7 @@ import retrofit.mime.TypedFile;
 
 import com.oneskyapp.eclipse.sync.api.model.FileUploadResponse;
 import com.oneskyapp.eclipse.sync.api.model.ProjectDetail;
+import com.oneskyapp.eclipse.sync.api.model.ProjectDetailResponse;
 import com.oneskyapp.eclipse.sync.api.model.ProjectGroupList;
 import com.oneskyapp.eclipse.sync.api.model.ProjectLanguageList;
 import com.oneskyapp.eclipse.sync.api.model.ProjectList;
@@ -39,5 +40,5 @@ public interface OneSkyService {
 			@Query("export_file_name") String exportFileName);
 	
 	@GET("/projects/{project_id}")
-	public ProjectDetail getProjectDetail(@Path("project_id") String projectId);
+	public ProjectDetailResponse getProjectDetail(@Path("project_id") String projectId);
 }

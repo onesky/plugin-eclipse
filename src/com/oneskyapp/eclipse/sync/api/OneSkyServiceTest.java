@@ -33,7 +33,7 @@ public class OneSkyServiceTest {
 				ProjectLanguageList languageList = service.getProjectLanguageList(String.valueOf(project.getId()));
 				printObject(languageList);
 				
-				ProjectDetail prjDetail = service.getProjectDetail(String.valueOf(project.getId()));
+				ProjectDetail prjDetail = service.getProjectDetail(String.valueOf(project.getId())).getDetail();
 				printObject(prjDetail);
 			}
 		}

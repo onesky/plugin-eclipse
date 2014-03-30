@@ -29,6 +29,7 @@ import com.oneskyapp.eclipse.sync.api.OneSkyService;
 import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
 import com.oneskyapp.eclipse.sync.api.model.Project;
 import com.oneskyapp.eclipse.sync.api.model.ProjectDetail;
+import com.oneskyapp.eclipse.sync.api.model.ProjectList;
 import com.oneskyapp.eclipse.sync.api.model.ProjectType;
 
 public class ProjectSelectionWizardPage extends WizardPage {
@@ -173,96 +174,15 @@ public class ProjectSelectionWizardPage extends WizardPage {
 					OneSkyService service = new OneSkyServiceBuilder(model
 							.getPublicKey(), model.getSecretKey()).build();
 
-//					ProjectList projectList = service.getProjectList(String
-//							.valueOf(model.getProjectGroup().getId()));
-//					final List<Project> projects = projectList.getProjects();
-					
-					Thread.sleep(1000);
-					
-					final List<Project> projects = new ArrayList<Project>();
-					Project prj;
-					prj = new Project(){
-
-						@Override
-						public long getId() {
-							return 1L;
-						}
-
-						@Override
-						public String getName() {
-							return "test 1";
-						}
-						
-					};
-					projects.add(prj);
-					prj = new Project(){
-
-						@Override
-						public long getId() {
-							return 2L;
-						}
-
-						@Override
-						public String getName() {
-							return "test 2";
-						}
-						
-					};
-					projects.add(prj);
+					ProjectList projectList = service.getProjectList(String
+							.valueOf(model.getProjectGroup().getId()));
+					final List<Project> projects = projectList.getProjects();
 					
 					final List<ProjectDetail> projectDetails = new ArrayList<ProjectDetail>();
 					for(Project project: projects){
 						monitor.subTask(String.format("Retrieving Project %s Details", project.getId()));
-						Thread.sleep(1000);
-//						ProjectDetail prjDetail = service.getProjectDetail(String.valueOf(project.getId()));
-//						prjDetails.add(prjDetail);
-						
-						ProjectDetail prjDetail;
-						prjDetail = new ProjectDetail(){
-
-							@Override
-							public String getDescription() {
-								return "desc";
-							}
-
-							@Override
-							public Long getStringCount() {
-								return 1L;
-							}
-
-							@Override
-							public Long getStringWordCount() {
-								return 1L;
-							}
-
-							@Override
-							public long getId() {
-								return 1L;
-							}
-
-							@Override
-							public String getName() {
-								return "name";
-							}
-
-							@Override
-							public ProjectType getType() {
-								return new ProjectType(){
-
-									@Override
-									public String getCode() {
-										return "prj type code";
-									}
-
-									@Override
-									public String getName() {
-										return "prj type name";
-									}
-									
-								};
-							}
-							
-						};
+						ProjectDetail prjDetail = service.getProjectDetail(
+								String.valueOf(project.getId())).getDetail();
 						projectDetails.add(prjDetail);
 					}
 					
