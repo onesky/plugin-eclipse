@@ -78,6 +78,7 @@ public class ProjectSelectionWizardPage extends WizardPage {
 			txtSearch = new Text(composite, SWT.BORDER | SWT.SEARCH);
 			txtSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 					false, 1, 1));
+			txtSearch.setMessage("type filter text");
 			txtSearch.addKeyListener(new KeyAdapter() {
 				public void keyReleased(KeyEvent ke) {
 					projectFilter.setSearchText(txtSearch.getText());
