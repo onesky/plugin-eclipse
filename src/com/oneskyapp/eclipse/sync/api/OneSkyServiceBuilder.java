@@ -1,5 +1,9 @@
 package com.oneskyapp.eclipse.sync.api;
 
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
+
 import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
 import retrofit.RestAdapter.Builder;
@@ -23,18 +27,7 @@ public class OneSkyServiceBuilder {
 		Builder builder = new RestAdapter.Builder()
 		.setEndpoint(domain)
 		.setRequestInterceptor(new OneSkyServiceRequestInterceptor(publicKey,sercetKey))
-        .setErrorHandler(new ErrorHandler() {
-			
-			@Override
-			public Throwable handleError(RetrofitError err) {
-//				String respBody = err.getResponse().getBody().toString();//TODO read content from input stream
-//				System.out.println(respBody);
-//				Meta meta = new Gson().fromJson(respBody, Meta.class);
-//				System.out.println(meta.getStatus());
-				return err;
-			}
-		});
-//		.setLogLevel(LogLevel.FULL)
+        .setErrorHandler(new OneSkyErrorHandler());
 		if(debugMode){
 			builder.setLogLevel(LogLevel.FULL);
 		}

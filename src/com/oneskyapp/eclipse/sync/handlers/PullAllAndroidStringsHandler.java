@@ -5,8 +5,12 @@ import java.util.List;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.internal.jobs.JobManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -55,15 +59,29 @@ public class PullAllAndroidStringsHandler extends AbstractHandler {
 	
 			final String projectId = pref.getProjectId();
 	
-			final List<ProjectLanguage> langs = service.getProjectLanguageList(
-					projectId).getLanguages();
-	
-			Job job = new AndroidLanguageFileDownloadJob(
-					langs.toArray(new ProjectLanguage[0]), project, service,
-					projectId);
+			Job job = new Job("Retrieve Project Languages") {
+				
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					monitor.beginTask("Retrieving Project languages",
+							100);
+					final List<ProjectLanguage> langs = service.getProjectLanguageList(
+							projectId).getLanguages();
+					if(!monitor.isCanceled()){
+						Job downloadJob = new AndroidLanguageFileDownloadJob(
+								langs.toArray(new ProjectLanguage[0]), project, service,
+								projectId);
+						downloadJob.setUser(true);
+						downloadJob.schedule();
+					}
+					
+					monitor.done();
+					
+					return Status.OK_STATUS;
+				}
+			};
 			job.setUser(true);
 			job.schedule();
-		
 		}
 		return null;
 	}

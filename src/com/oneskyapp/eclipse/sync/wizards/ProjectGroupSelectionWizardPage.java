@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -23,7 +25,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.statushandlers.StatusManager;
 
+import com.oneskyapp.eclipse.sync.Activator;
 import com.oneskyapp.eclipse.sync.api.OneSkyService;
 import com.oneskyapp.eclipse.sync.api.OneSkyServiceBuilder;
 import com.oneskyapp.eclipse.sync.api.model.ProjectGroup;
@@ -145,7 +149,6 @@ public class ProjectGroupSelectionWizardPage extends WizardPage {
 							.getProjectGroups();
 
 					monitor.done();
-
 					Display.getDefault().syncExec(new Runnable() {
 
 						@Override
@@ -158,6 +161,9 @@ public class ProjectGroupSelectionWizardPage extends WizardPage {
 			});
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
+			IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+					e.getTargetException().getMessage());
+			StatusManager.getManager().handle(status, StatusManager.LOG|StatusManager.SHOW);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

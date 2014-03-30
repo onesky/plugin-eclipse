@@ -7,6 +7,12 @@ public class Meta {
 
 	@SerializedName("record_count")
 	private int recordCount;
+	
+	private String message;
+
+	public String getMessage() {
+		return message;
+	}
 
 	public String getStatus() {
 		return status;
