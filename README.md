@@ -10,12 +10,18 @@ Features
 Setup
 ======
 1. From your project properties, navigate to **OneSky Sync**. 
-2. Enter your API *Public Key* & *Secret Key*. You can get those keys from your site settings.
-3. Either enter your project ID or Press the *Browse* button.
-4. Press *OK*  
+2. Enter your API **Public Key** & **Secret Key**. You can get those keys from your site settings.
+3. Either enter your project ID or Press the *Browse* button to select project.
+4. Press **OK**.  
+
+![Project Properties](../blob/master/md_imgs/project_properties.png?raw=true)
 
 Android Project
 ----------------
+You can send or sync language files from project context menu.
+
+![Project Context Menu](../blob/master/md_imgs/project_context_menu.png?raw=true)
+
 ### Send Android base language file to OneSky
 1. From project context menu, navigate to **OneSky Sync**.
 2. Choose **Send to OneSky for Translation**. This plugin will send Project's */res/values/strings.xml* to OneSky.
@@ -35,3 +41,6 @@ If you sync file by mistake. You can make use of eclipse feature *Local History*
 1. From file context menu, navigate to **Replace with**.
 2. Choose **Local History**.
 3. Select version from history.
+4. Press **Replace**.
+
+
