@@ -14,13 +14,13 @@ Setup
 3. Either enter your project ID or Press the *Browse* button to select project.
 4. Press **OK**.  
 
-![Project Properties](../blob/master/md_imgs/project_properties.png?raw=true)
+![Project Properties](/md_imgs/project_properties.png)
 
 Android Project
 ----------------
 You can send or sync language files from project context menu.
 
-![Project Context Menu](../blob/master/md_imgs/project_context_menu.png?raw=true)
+![Project Context Menu](/md_imgs/project_context_menu.png)
 
 ### Send Android base language file to OneSky
 1. From project context menu, navigate to **OneSky Sync**.
