@@ -14,7 +14,7 @@ Via Eclipse Marketplace
 -------------------------
 [![Install Button](http://marketplace.eclipse.org/sites/all/modules/custom/marketplace/images/installbutton.png)](http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=1605645)
 
-You can install this plugin by dragging the install button above into your Eclipse Workspace or search it through in Eclipar Marketplace (navigate to /Help/Eclipse Marketplace) 
+You can install this plugin by dragging the install button above into your Eclipse Workspace or search it through in Eclipse Marketplace (navigate to /Help/Eclipse Marketplace) 
 
 Via Install New Software
 --------------------------
