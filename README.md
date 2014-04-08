@@ -13,11 +13,13 @@ Installing this Plugin
 Via Eclipse Marketplace
 -------------------------
 [![Install Button](http://marketplace.eclipse.org/sites/all/modules/custom/marketplace/images/installbutton.png)](http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=1605645)
+
 You can install this plugin by dragging the install button above into your Eclipse Workspace or search it through in Eclipar Marketplace (navigate to /Help/Eclipse Marketplace) 
 
 Via Install New Software
 --------------------------
 You can install this plugin by manually adding the update site.
+
 1. Navigate to /Help/Install New Software
 2. Press **Add...**
 3. Enter the name **OneSky Sync**
