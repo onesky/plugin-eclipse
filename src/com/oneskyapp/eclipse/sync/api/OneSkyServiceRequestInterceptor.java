@@ -28,6 +28,8 @@ public class OneSkyServiceRequestInterceptor implements RequestInterceptor{
 			request.addQueryParam("api_key", publicKey);
         	request.addQueryParam("timestamp", timestamp);
         	request.addQueryParam("dev_hash", devHash);
+        	
+        	request.addHeader("Onesky-Plugin", "android-eclipse-string"); 
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
