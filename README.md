@@ -44,16 +44,16 @@ You can send or sync language files from project context menu.
 ![Project Context Menu](/md_imgs/project_context_menu.png)
 
 ### Send Android base language file to OneSky
-1. From project context menu, navigate to **OneSky Sync**.
+1. From project context menu, navigate to **OneSky**.
 2. Choose **Send to OneSky for Translation**. This plugin will send Project's */res/values/strings.xml* to OneSky.
 
 ### Sync All Languages
-1. From project context menu, navigate to **OneSky Sync**.
+1. From project context menu, navigate to **OneSky**.
 2. Choose **Sync All Languages**. All available languages from your OneSky project will be downloaded.
 
 ### Sync Specific Languages
-1. From project context menu, navigate to **OneSky Sync**.
-2. Choose **Send to OneSky for Translation**. 
+1. From project context menu, navigate to **OneSky**.
+2. Choose **Sync Specific Languages**. 
 3. Select languages. Selected languages will be downloaded.
 
 ### Restore File
