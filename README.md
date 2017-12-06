@@ -64,4 +64,7 @@ If you sync file by mistake. You can make use of eclipse feature *Local History*
 3. Select version from history.
 4. Press **Replace**.
 
+### Helpful articles
+[ How to find API key ](http://support.oneskyapp.com/solution/categories/74754/folders/150388/articles/89104-how-to-find-your-api)
 
+[More from here](http://support.oneskyapp.com/solution/categories)
